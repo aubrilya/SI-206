@@ -1,0 +1,344 @@
+<?php
+session_start();
+?>
+		
+<!DOCTYPE html>
+	<html lang = "en">
+
+		<head>
+			<meta name="viewport" content="width=device-width, initial-scale=1">
+			<link rel="stylesheet" type="text.css" href="style/default.css">
+			<link type="text/css" href="style/basscss.min.css" rel="stylesheet">
+			<link rel="stylesheet" type="text.css" href="style/bootstrap.min">
+			<link type="text/css" rel="stylesheet" href="style/style.css">
+
+			<?php
+				$fName = basename(__FILE__);
+				?>
+
+			<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+				
+		</head>
+
+	<body>
+
+		<?php
+		include("templates/header.php");
+		?>	
+
+	<?php
+
+		if (isset($_POST['username'])) {
+    		$_SESSION['username'] =$_POST['username'];
+			}
+
+		if (isset($_POST['name'])) {
+    		$_SESSION['name'] =$_POST['name'];
+			}
+
+		if (isset($_POST['age'])) {
+    		$_SESSION['age'] =$_POST['age'];
+			}
+
+		if (isset($_POST['gender'])) {
+    		$_SESSION['gender'] =$_POST['gender'];
+			}
+
+		if (isset($_POST['pref'])) {
+    		$_SESSION['pref'] =$_POST['pref'];
+			}
+
+		if (isset($_POST['nationality'])) {
+    		$_SESSION['nationality'] =$_POST['nationality'];
+			}
+
+		if (isset($_POST['religion'])) {
+    		$_SESSION['religion'] =$_POST['religion'];
+			}
+
+		if (isset($_POST['likes'])) {
+    		$_SESSION['likes'] =$_POST['likes'];
+			}
+
+		if (isset($_POST['dislikes'])) {
+    		$_SESSION['dislikes'] =$_POST['dislikes'];
+			}
+
+		if (isset($_POST['hobbies'])) {
+    		$_SESSION['hobbies'] =$_POST['hobbies'];
+			}
+
+		if (isset($_POST['tag'])) {
+    		$_SESSION['tag'] =$_POST['tag'];
+			}
+
+		?>
+
+
+	<section class="container">
+		<div class="clearfix">
+			<div class="lg-col-11 mx-auto">
+				<h2 class="mb0"><?php
+							echo $_SESSION['name'];?></h2>
+				<h4 class="mt0"><?php
+							echo $_SESSION['username'];?></h4> <!-- screen name/handle -->
+				<div class="lg-col lg-col-5">
+
+				<form id="form1" runat="server">
+				        <input type='file' id="imgInp" />
+				        <img id="blah" src="imgs/uploadfoto.jpg" alt="your image" />
+				    </form>
+
+				    <script>	// source from http:jsfiddle.net/LvsYc/
+						function readURL(input) {
+				        if (input.files && input.files[0]) {
+				            var reader = new FileReader();
+				            
+				            reader.onload = function (e) {
+				                $('#blah').attr('src', e.target.result);
+				            }
+				            
+				            reader.readAsDataURL(input.files[0]);
+				        }
+				    }
+				    
+				    $("#imgInp").change(function(){
+				        readURL(this);
+				    });
+
+					</script>
+				</div>
+
+				<div class="lg-col lg-col-6">
+						<h2>This is where a bio would go</h2>
+					</div>
+				</div>
+				</div>
+			<section class="container">
+					<div class="clearfix">
+						<div class="lg-col-11">
+
+					<p> Age: 49 but look 29 </p>
+					<p> Gender: Male, completely manly </p>
+					<p> Interested in: Women </p>
+					<p> Nationality: 100% American </p>
+					<p> Religion: atheist, you've gotta be a fool to think theres a god out here </p>
+
+					<p> Likes (i.e. artistic, funny): I like my women thick and juicy. I also like a dame who can cook a complete American breakfast of scrambled eggs, bacon, sausage, biscuits and gravy </p>
+
+					<p> Dislikes: Irish or British accent, always late for everything, a timid women who doesn't wanna try new things and get down and dirty </p>
+
+					<p> Hobbies: I love dueling. I survived a shot to the chest to kill Charles Dickinson in a duel over a horse-racing bet. I also love cheese. I store a 1400 pound cheddar wheel in the lobby of the White House. I most definitely take great pleasure in bashing those damn Brits in my spare time. </p> 
+
+
+					<p>Tagline: A quickie</p>
+				</div>
+			</div>
+		</div>
+	</section>
+
+
+
+	<!--Check names of users against a sex offenders registry 
+	Users can log complaints and block other users who send abusive communication -->
+
+
+			<?php
+			include("templates/footer.php");
+			?>	
+
+</body>
+</html>
+</head>
+
+	<body>
+
+		<?php
+		include("templates/header.php");
+		?>	
+
+
+		<?php
+
+
+		  if (!isset($_SESSION)) {
+		 	 echo "The session was not already set</br>";
+			$_SESSION['GName'] =$_POST['name'];
+			
+		  }
+		  else {
+		  echo "The session was already set</br>";
+		  } 
+
+
+		 echo $_SESSION['GName'];
+	// 	if (!isset($_SESSION['count'])) {
+	// 	$_SESSION['count'] = 0;
+
+	// } else {
+	// 	$_SESSION['count']++;
+	// }
+
+	// session_write_close();
+
+
+// echo $_SESSION['count'];
+
+
+
+
+	$filename = "SaveInfo.csv";
+	$isItExisting = (file_exists($filename)); 				//check if csv file actually exists
+
+		$handle = fopen($filename, 'a');						//a = append, w = write
+	$msg = "Thank you ". $_POST['email'] . " for submitting your information.\n";	//Email message
+	$stringToAdd="";										//File information
+
+	if (!$isItExisting){
+		foreach($_POST as $name => $value) {
+			$stringToAdd.="$name,";							//Make the column headings. 
+		}													//Use comas for excel column, /n for next row
+		$stringToAdd.="\n";									//Make sure file goes to next line
+		fwrite($handle, $stringToAdd);						//Write the 
+	}
+
+	$stringToAdd="";										//Reset the file info to blank
+	foreach($_POST as $name => $value) {
+		// print "$name : $value<br/>";						//This is going to the screen
+		$msg .="$name";										//This is going to the email
+		$stringToAdd.="$value,";							//This is going to the file
+	}
+	$stringToAdd.="\n";
+
+	fwrite($handle, $stringToAdd);
+
+	//now close the file
+	fclose($handle); 
+	$to = $_POST["email : $value\n"];
+	$headers = "From: ". $_POST["name"] ."<".$_POST["email"]. ">\r\n";
+
+	mail($to, 'Form Data', $msg,$headers);
+	mail("behaviorchange.mi@gmail.com","This is a test email",$msg);
+
+			?>
+		<!-- 	/* NOTES: 
+			-use double quotes to get variables
+			-use comas for excel column, /n for next row
+			.= Concatinate a string or something (line 21)
+		*/ -->
+
+		<!-- 	if (!is_array($value)){
+		-->	
+
+
+
+
+	<section class="container">
+		<div class="clearfix">
+			<div class="lg-col-11 mx-auto">
+				<h2 class="mb0">
+				<?php
+					echo $_POST['name'];?></h2>
+				<h4 class="mt0">
+				<?php
+					echo $_POST['username'];?></h4> <!-- screen name/handle -->
+				
+				<div class="lg-col lg-col-5">
+
+			        <form id="form1" runat="server">
+				        <input type='file' id="imgInp" />
+				        <img id="blah" src="imgs/uploadfoto.jpg" alt="your image" />
+				    </form>
+
+				    <script>	// source from http:jsfiddle.net/LvsYc/
+						function readURL(input) {
+				        if (input.files && input.files[0]) {
+				            var reader = new FileReader();
+				            
+				            reader.onload = function (e) {
+				                $('#blah').attr('src', e.target.result);
+				            }
+				            
+				            reader.readAsDataURL(input.files[0]);
+				        }
+				    }
+				    
+				    $("#imgInp").change(function(){
+				        readURL(this);
+				    });
+
+						</script>
+
+					
+				</div>
+
+				<div class="lg-col lg-col-6">
+
+					<p class="h3 fancy">"If we want a blurb, we'll have to make a textarea in the form"  <!--100 character headline:-->
+				    </p>
+				</div>
+
+				<div class="lg-col-11">
+
+					<ul class="list-reset">
+						<li>Age: <?php
+							echo $_POST['age'];?></li>
+					
+						<li>Country: <?php
+							echo $_POST['country'];?></li>
+
+						<li>Gender: <?php
+							echo $_POST['gender'];?></li>
+						
+						<li>Tagline: <?php
+							echo $_POST['tag'];?></li>
+
+
+				</div>
+			</div>
+		</div>
+
+	</section>
+
+	<section class="clearfix">
+		<div class="col-4 mx-auto">
+	<!-- Let's save a new file first -->
+		<!-- <button class="button blue" onclick="saveFile()">Save this info</button> -->
+
+	<?php
+
+		// save html file
+	$targetFile = $_POST['username'] . ".php";
+	$File2Copy = "profile_stock.php";
+
+	copy($File2Copy, $targetFile);
+		// function saveFile() {
+		// 	copy("profile_stock.php", $filename2);
+
+		if (file_exists($_POST['username'] . ".php")) {
+    		echo "Success : New profile has been made";
+			} else {
+			    echo "Failure: $targetCopy does not exist";
+				}
+		?>
+		
+
+		</div>
+	</section>
+
+
+
+
+
+	<!--Check names of users against a sex offenders registry 
+	Users can log complaints and block other users who send abusive communication -->
+
+
+			<?php
+			include("templates/footer.php");
+			?>	
+
+</body>
+</html>
+
+
